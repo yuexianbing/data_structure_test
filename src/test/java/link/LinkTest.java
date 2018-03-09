@@ -1,8 +1,13 @@
 package link;
 
 import com.ybin.link.CircularLink;
+import com.ybin.link.DoubleLink;
 import com.ybin.link.SinglyLinked;
 import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author yuebing
@@ -40,5 +45,12 @@ public class LinkTest {
         System.out.println("插入节点");
         circularLink.insertNode("节点4", "节点5");
         circularLink.showAllNode(circularLink);
+    }
+
+    @Test
+    public void testDoubleLink() {
+        List<Long> lists = Arrays.asList(new Long[]{1L, 2L, 3L, 5L});
+        DoubleLink<Long> link = new DoubleLink<>(lists);
+        link.findNodeByIndex(3);
     }
 }
