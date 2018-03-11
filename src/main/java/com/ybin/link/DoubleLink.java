@@ -61,6 +61,46 @@ public class DoubleLink<E> {
         return true;
     }
 
+    /**
+     * 添加节点
+     * @param e
+     */
+    public void add(E e) {
+        Node last = this.last;
+        Node newNode = new Node(e, null, last);
+        this.last = newNode;
+        if (last == null) {
+            first = newNode;
+        }  else {
+            last.next = newNode;
+        }
+        size++;
+        modCount++;
+    }
+
+    /**
+     * poll一个元素
+     */
+    public E poll() {
+        return first == null ? null : unLinked(first);
+    }
+    private E unLinked(Node node) {
+        assert node !=null;
+        E e = (E) first.item;
+        Node next = first.next;
+        first.next = null;
+        first.prev = null;//避免内存泄漏
+        first = next;
+        if (next == null) {
+            last =null;
+        } else {
+            next.prev = null;
+        }
+        size--;
+        modCount++;
+        return e;
+    }
+
     public Node findNodeByIndex(int index) {
         if (index < (size << 1) ) {
             Node node = first;

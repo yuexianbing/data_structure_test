@@ -50,7 +50,13 @@ public class LinkTest {
     @Test
     public void testDoubleLink() {
         List<Long> lists = Arrays.asList(new Long[]{1L, 2L, 3L, 5L});
-        DoubleLink<Long> link = new DoubleLink<>(lists);
+        DoubleLink<Long> link = new DoubleLink<>();
         link.findNodeByIndex(3);
+//        link.poll();
+//        link.poll();
+//        link.poll();
+        link.add(8L);
+        link.add(10L);
+        link.add(11L);
     }
 }
