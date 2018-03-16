@@ -1,9 +1,12 @@
 package link;
 
-import com.ybin.stack.MyStack;
+import com.ybin.stack.ArrayStack;
+import com.ybin.stack.LinkStack;
 import org.junit.Test;
 
 import java.util.Stack;
+import java.util.Vector;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * @author yuebing
@@ -19,13 +22,24 @@ public class StackTest {
         stack.size();
         stack.capacity();
 
-        MyStack<Integer> myStack = new MyStack<>();
-        myStack.push(1);
-        myStack.push(2);
-        myStack.push(3);
+        LinkStack<Integer> linkStack = new LinkStack<>();
+        linkStack.push(1);
+        linkStack.push(2);
+        linkStack.push(3);
 
-        myStack.peek();
-        myStack.pop();
-        myStack.pop();
+        linkStack.peek();
+        linkStack.pop();
+        linkStack.pop();
+    }
+
+    @Test
+    public void testArrayStack() {
+        ArrayStack<Integer> stack = new ArrayStack<>(2);
+        stack.add(1);
+        stack.add(2);
+        stack.add(3);
+        stack.pop();
+
+        ConcurrentLinkedQueue queue = new ConcurrentLinkedQueue();
     }
 }

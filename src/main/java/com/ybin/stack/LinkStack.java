@@ -5,7 +5,7 @@ package com.ybin.stack;
  * @version 1.0 2017/9/4
  * @Description 链表实现堆栈
  */
-public class MyStack<E> {
+public class LinkStack<E> {
 
     transient private Node first;
 
@@ -15,7 +15,7 @@ public class MyStack<E> {
 
     int modCount = 0;
 
-    public MyStack() {
+    public LinkStack() {
     }
 
     /**
