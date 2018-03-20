@@ -90,8 +90,15 @@ public class ArrayQueue<T> {
         if (index > size) {
             throw new IndexOutOfBoundsException("数组下标越界");
         }
+
         T t = item[index];
         item[index] = null;
         return t;
+    }
+
+    public static void main(String[] args) {
+       // for( ;;){}
+
+       while (true){}
     }
 }
