@@ -4,6 +4,7 @@ import com.ybin.queue.MyConcurrentLinkedQueue;
 import org.junit.Test;
 
 import java.util.concurrent.BrokenBarrierException;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.ExecutorService;
@@ -71,5 +72,20 @@ public class ConcurrentLinkedQueueTest {
 //        });
 //        t1.start();
 //        t2.start();
+    }
+
+    @Test
+    public void testPoll() {
+        ConcurrentLinkedQueue queue = new ConcurrentLinkedQueue();
+        queue.add(1);
+        queue.add(2);
+        queue.add(3);
+        queue.add(4);
+        queue.add(5);
+        queue.add(6);
+
+        for (;;) {
+            queue.poll();
+        }
     }
 }

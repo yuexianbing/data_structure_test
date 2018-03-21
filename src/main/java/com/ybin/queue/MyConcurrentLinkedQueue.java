@@ -10,7 +10,7 @@ import java.lang.reflect.Field;
  * @version 1.0 2017/9/4
  * @Description
  */
-public class MyConcurrentLinkedQueue<E> implements Serializable {
+public class MyConcurrentLinkedQueue<T> implements Serializable {
 
     private static final long serialVersionUID = 7956179482617663503L;
     public static Unsafe UNSAFE;
@@ -42,6 +42,14 @@ public class MyConcurrentLinkedQueue<E> implements Serializable {
 
         public boolean casNext(Node expect, Node result) {
             return UNSAFE.compareAndSwapObject(this, nextOffset, expect, result);
+        }
+
+        public boolean casItem(T exception, T result) {
+            return UNSAFE.compareAndSwapObject(this, itemOffset, exception, result);
+        }
+
+        public void lazySet(Node h) {
+            UNSAFE.putOrderedObject(this, nextOffset, h);
         }
     }
 
@@ -75,7 +83,7 @@ public class MyConcurrentLinkedQueue<E> implements Serializable {
      * @param e
      * @return
      */
-    public boolean add(E e) {
+    public boolean add(T e) {
         checkNull(e);
         Node node = new Node(e);
         for (Node t = tail, p = t; ;) {
@@ -100,14 +108,39 @@ public class MyConcurrentLinkedQueue<E> implements Serializable {
         }
     }
 
-//    public E poll() {
-//
-//    }
+    public T poll() {
+        restart:
+        for (; ; ) {
+            for (Node h = head, p = h, q; ;) {
+                T e = (T) p.item;
+                if (e != null && p.casItem(e, null)) {
+                    if (p != h) {
+                        casHead(h, ((q = p.next) != null? q: p));
+                    }
+                    return e;
+                } else if ((q = p.next) == null) {
+                    updateHead(h, p);
+                } else {
+                    p = q;
+                }
+            }
+        }
+    }
 
-    private void checkNull(E e) {
+    private void checkNull(T e) {
         if (e == null) {
             throw new NullPointerException();
         }
+    }
+
+    private void updateHead(Node h, Node p) {
+        if (h != p && casHead(h, p)) {
+            h.lazySet(h);
+        }
+    }
+
+    private boolean casHead(Node except, Node result) {
+        return UNSAFE.compareAndSwapObject(this, headOffset, except, result);
     }
 
     private boolean casTail(Node expect, Node result) {
