@@ -31,7 +31,7 @@ public class SortTest {
     @Test
     public void quickSortTest() {
         int[] arr = new int[]{15, -1, 22, 10, 0, 17, 13};
-        Sort.quickSort(arr, 0, arr.length-1);
+        Sort.quickSort(arr);
         for (int a : arr) {
             System.out.println(a);
         }

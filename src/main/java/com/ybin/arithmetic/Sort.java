@@ -65,10 +65,19 @@ public class Sort {
      * 快速排序
      *
      * @param a
+     */
+    public static void quickSort(int[] a) {
+        quickSort(a, 0, a.length-1);
+    }
+
+    /**
+     * 快速排序
+     *
+     * @param a
      * @param low
      * @param hight
      */
-    public static void quickSort(int[] a, int low, int hight) {
+    private static void quickSort(int[] a, int low, int hight) {
         if (a == null || a.length == 0) {
             return;
         }
@@ -97,5 +106,30 @@ public class Sort {
         quickSort(a, low, right - 1);
         //递归排序基准点右侧的数据
         quickSort(a, right + 1 , hight);
+    }
+
+    /**
+     * 选择排序
+     *
+     * @param a
+     */
+    public void selectSort(int[] a) {
+        if (a == null || a.length == 0) {
+            return;
+        }
+        int min;
+        for (int i =0; i < a.length - 1; i++) {
+            min = i;
+            for (int j = 1 ; j < a.length; j++) {
+                if (a[j] < a[min]) {
+                    min = j;
+                }
+            }
+            if (min != i) {
+                int x = a[i];
+                a[i] = a[min];
+                a[min] = x;
+            }
+        }
     }
 }
