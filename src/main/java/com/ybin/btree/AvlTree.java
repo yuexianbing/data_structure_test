@@ -15,7 +15,7 @@ public class AvlTree<E extends Comparable> {
     /**
      * AVL树高度
      */
-    private int hight;
+    private int height;
 
     private static final class Node<E> {
         /**
@@ -33,11 +33,12 @@ public class AvlTree<E extends Comparable> {
         /**
          * 节点高度
          */
-        int nodeHight;
+        int nodeHeight;
 
         public Node(E element) {
             this(element, null, null);
         }
+
         public Node(E element, Node left, Node right) {
             this.element = element;
             this.left = left;
@@ -65,56 +66,124 @@ public class AvlTree<E extends Comparable> {
         return banlance(node);
     }
 
+    /**
+     * 添加节点后,平衡AVL树
+     *
+     * @param node
+     * @return
+     */
     private Node banlance(Node node) {
         if (node == null) {
             return node;
         }
-        if (hight(node.left) - hight(node.right) > 1) {
-            if (hight(node.left.left) >= hight(node.left.right)) {
-                node = this.rotateWithLeftChild(node);
+        if (height(node.left) - height(node.right) > 1) {
+            if (height(node.left.left) >= height(node.left.right)) {
+                node = this.rightRotate(node);
             } else {
-                node = this.doubleRotateWithLeftChild(node);
+                node = this.leftAndRightRotate(node);
             }
-        } else if (hight(node.right) - hight(node.left) > 1) {
-            if (hight(node.right.right) >= hight(node.right.left)) {
-                node = this.rotateWithRightChild(node);
+        } else if (height(node.right) - height(node.left) > 1) {
+            if (height(node.right.right) >= height(node.right.left)) {
+                node = this.leftRotate(node);
             } else {
-                node = this.doubleRotateWithRightChild(node);
+                node = this.RightAndLeftRotate(node);
             }
 
         }
-        node.nodeHight = Math.max(hight(node.left), hight(node.right)) + 1;
+        node.nodeHeight = Math.max(height(node.left), height(node.right)) + 1;
         return node;
     }
 
-    private Node doubleRotateWithLeftChild(Node node) {
-        node.left = this.rotateWithRightChild(node.left);
-       return rotateWithLeftChild(node);
+    /**
+     * 先左旋再右旋
+     * 1.先将该节点的左孩子节点左旋;
+     * 2.再将旋转后的节点,右旋;
+     * 3.重新计算旋转后各节点的高度;
+     *
+     *       3      |      3    |     2
+     *      /       |     /     |    / \
+     *     1        ->   2      ->  1  3
+     *      \       |   /       |
+     *       2      |  1        |
+     * @param node
+     * @return
+     */
+    private Node leftAndRightRotate(Node node) {
+        node.left = this.leftRotate(node.left);
+        return rightRotate(node);
     }
 
-    private Node doubleRotateWithRightChild(Node node) {
-        node.right = this.rotateWithLeftChild(node.right);
-        return rotateWithRightChild(node);
+    /**
+     * 先右旋再左旋
+     * 1.先将该节点的右孩子节点右旋;
+     * 2.先将上一步旋转完成的节点,左旋;
+     * 3.再重新计算旋转后各节点的高度;
+     *
+     *     1      |    1      |     2
+     *      \     |     \     |    / \
+     *       3    ->    2     ->  1  3
+     *      /     |      \    |
+     *     2      |       3   |
+     * @param node
+     * @return
+     */
+    private Node RightAndLeftRotate(Node node) {
+        node.right = this.rightRotate(node.right);
+        return leftRotate(node);
     }
 
-    private Node rotateWithRightChild(Node oldNode) {
+    /**
+     * 左旋
+     * 1.以传入的节点的右节点为支点,将传入的节点旋转到该支点节点的左节点上;
+     * 2.重新计算旋转后的节点的高度;
+     *      1       |        2
+     *       \      |       / \
+     *        2     ->     1  3
+     *         \    |
+     *          3   |
+     * @param oldNode
+     * @return
+     */
+    private Node leftRotate(Node oldNode) {
         Node  newNode = oldNode.right;
         oldNode.right = newNode.left;
         newNode.left = oldNode;
-        oldNode.nodeHight = Math.max(hight(oldNode.left), hight(oldNode.right)) + 1;
-        newNode.nodeHight = Math.max(hight(newNode.right), oldNode.nodeHight) + 1;
+        oldNode.nodeHeight = Math.max(height(oldNode.left), height(oldNode.right)) + 1;
+        newNode.nodeHeight = Math.max(height(newNode.right), oldNode.nodeHeight) + 1;
         return newNode;
     }
 
-    private Node rotateWithLeftChild(Node oldNode) {
+    /**
+     * 右旋
+     * 1.以传入的节点的左节点为支点,将传入的节点旋转到该支点节点的右节点上;
+     * 2.重新计算旋转后的节点的高度;
+     *
+     *          3    |       2
+     *         /     |      / \
+     *        2      ->    1   3
+     *       /       |
+     *      1        |
+     * @param oldNode
+     * @return
+     */
+    private Node rightRotate(Node oldNode) {
         Node newNode = oldNode.left;
         oldNode.left = newNode.right;
         newNode.right = oldNode;
-        oldNode.nodeHight = Math.max(hight(oldNode.left), hight(oldNode.right)) + 1;
-        newNode.nodeHight = Math.max(hight(newNode.left), oldNode.nodeHight) + 1;
+        oldNode.nodeHeight = Math.max(height(oldNode.left), height(oldNode.right)) + 1;
+        newNode.nodeHeight = Math.max(height(newNode.left), oldNode.nodeHeight) + 1;
         return newNode;
     }
-    private int hight(Node node) {
-        return node == null ? -1 : node.nodeHight;
+
+    /**
+     * 获取节点高度
+     * 1.节点为空,则高度为-1;
+     * 2.否则返回节点高度;
+     *
+     * @param node
+     * @return
+     */
+    private int height(Node node) {
+        return node == null ? -1 : node.nodeHeight;
     }
 }
