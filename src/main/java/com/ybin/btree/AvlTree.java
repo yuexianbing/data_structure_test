@@ -61,9 +61,9 @@ public class AvlTree<E extends Comparable> {
         }else if (compare > 0) {
             node.right = insert(e, node.right);
         } else {
-
+            return node;
         }
-        return banlance(node);
+        return balance(node);
     }
 
     /**
@@ -72,7 +72,7 @@ public class AvlTree<E extends Comparable> {
      * @param node
      * @return
      */
-    private Node banlance(Node node) {
+    private Node balance(Node node) {
         if (node == null) {
             return node;
         }
@@ -99,7 +99,7 @@ public class AvlTree<E extends Comparable> {
      * 1.先将该节点的左孩子节点左旋;
      * 2.再将旋转后的节点,右旋;
      * 3.重新计算旋转后各节点的高度;
-     *
+     * 4.旋转效果:
      *       3      |      3    |     2
      *      /       |     /     |    / \
      *     1        ->   2      ->  1  3
@@ -118,7 +118,7 @@ public class AvlTree<E extends Comparable> {
      * 1.先将该节点的右孩子节点右旋;
      * 2.先将上一步旋转完成的节点,左旋;
      * 3.再重新计算旋转后各节点的高度;
-     *
+     * 4.旋转效果:
      *     1      |    1      |     2
      *      \     |     \     |    / \
      *       3    ->    2     ->  1  3
@@ -136,6 +136,7 @@ public class AvlTree<E extends Comparable> {
      * 左旋
      * 1.以传入的节点的右节点为支点,将传入的节点旋转到该支点节点的左节点上;
      * 2.重新计算旋转后的节点的高度;
+     * 3.旋转效果:
      *      1       |        2
      *       \      |       / \
      *        2     ->     1  3
@@ -157,7 +158,7 @@ public class AvlTree<E extends Comparable> {
      * 右旋
      * 1.以传入的节点的左节点为支点,将传入的节点旋转到该支点节点的右节点上;
      * 2.重新计算旋转后的节点的高度;
-     *
+     * 3.旋转效果:
      *          3    |       2
      *         /     |      / \
      *        2      ->    1   3
