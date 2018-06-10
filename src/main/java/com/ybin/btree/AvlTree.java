@@ -66,6 +66,34 @@ public class AvlTree<E extends Comparable> {
         return balance(node);
     }
 
+    public void remove(E e) {
+        if (e != null) {
+            this.root = this.remove(e, root);
+        }
+    }
+
+    private Node remove(E e, Node node) {
+        if (node == null) {
+            return node;
+        }
+        int compare = e.compareTo(node.element);
+        if (compare < 0) {
+            node.left = remove(e, node.left);
+        } else if (compare > 0) {
+            node.right = remove(e, node.right);
+        } else if (node.left != null && node.right != null) {
+            Node min = node.right;
+            while (min.left != null) {
+                min = min.left;
+            }
+            node.element = min.element;
+            node.right = remove((E) node.element, node.right);
+        } else {
+            node = node.left == null ? node.right : node.left;
+        }
+        return this.balance(node);
+    }
+
     /**
      * 添加节点后,平衡AVL树
      *
@@ -86,7 +114,7 @@ public class AvlTree<E extends Comparable> {
             if (height(node.right.right) >= height(node.right.left)) {
                 node = this.leftRotate(node);
             } else {
-                node = this.RightAndLeftRotate(node);
+                node = this.rightAndLeftRotate(node);
             }
 
         }
@@ -127,7 +155,7 @@ public class AvlTree<E extends Comparable> {
      * @param node
      * @return
      */
-    private Node RightAndLeftRotate(Node node) {
+    private Node rightAndLeftRotate(Node node) {
         node.right = this.rightRotate(node.right);
         return leftRotate(node);
     }
