@@ -53,4 +53,44 @@ public class BtreeLinked<T> {
         }
         return true;
     }
+
+    public void show() {
+        this.postorderTraversal(root);
+    }
+
+    /**
+     * 前序遍历
+     *
+     */
+    public void showPreOrder(Node node) {
+        if (node != null) {
+            System.out.println("node = [" + node.item + "]");
+            showPreOrder(node.leftNode);
+            showPreOrder(node.rightNode);
+        }
+    }
+
+    /**
+     * 中序遍历
+     * @param node
+     */
+    public void showFixeOrder(Node node ) {
+        if (node != null) {
+            showFixeOrder(node.leftNode);
+            System.out.println("node = [" + node.item + "]");
+            showFixeOrder(node.rightNode);
+        }
+    }
+
+    /**
+     * 后续遍历
+     * @param node
+     */
+    public void postorderTraversal (Node node) {
+        if (node != null) {
+            postorderTraversal(node.leftNode);
+            postorderTraversal(node.rightNode);
+            System.out.println("node = [" + node.item + "]");
+        }
+    }
 }

@@ -82,6 +82,7 @@ public class AvlTree<E extends Comparable> {
         } else if (compare > 0) {
             node.right = remove(e, node.right);
         } else if (node.left != null && node.right != null) {
+            //找出该节点右节点的最小节点,替换被删除的节点
             Node min = node.right;
             while (min.left != null) {
                 min = min.left;

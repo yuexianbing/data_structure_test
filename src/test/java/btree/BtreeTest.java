@@ -15,17 +15,16 @@ public class BtreeTest {
      */
     @Test
     public void testAddBtreeLiked() {
-        BtreeLinked<Integer> btree = new BtreeLinked<Integer>(10);
+        BtreeLinked<Integer> btree = new BtreeLinked<Integer>(7);
+//        btree.add(7);
         btree.add(4);
         btree.add(11);
-        btree.add(2);
-        btree.add(8);
-        btree.add(12);
-        btree.add(1);
         btree.add(3);
-        btree.add(6);
+        btree.add(5);
         btree.add(9);
-        btree.add(15);
-        btree.add(14);
+        btree.add(12);
+        btree.add(2);
+
+        btree.show();
     }
 }
