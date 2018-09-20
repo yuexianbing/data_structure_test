@@ -57,9 +57,35 @@ public class Solution {
         return j;
     }
 
+    /**
+     * lettcode 75  三路快排解决数组3种重复元素的排序 O(n)
+     *
+     * @param nums
+     */
+    public void sortColors(int[] nums) {
+        int zero = -1;
+        int two = nums.length;
+        for (int i = 0; i < two;) {
+            if (nums[i] == 1 ) {
+                i++;
+            } else if (nums[i] == 2) {
+                swap(nums, i, --two);
+            } else {
+                assert nums[i] == 0;
+                swap(nums, i++, ++zero);
+            }
+        }
+    }
+
+    public void swap(int[] nums, int a, int b) {
+        int c = nums[a];
+        nums[a] = nums[b];
+        nums[b] = c;
+    }
+
     @Test
     public void test() {
-        int[] nums = new int[]{0, 1, 2, 0, 6};
-        moveZeroes(nums);
+        int[] nums = new int[]{2,0,2,1,1,0};
+        sortColors(nums);
     }
 }
