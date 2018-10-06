@@ -23,14 +23,20 @@ public class LinkTest {
         singlyLinked.add("节点2");
         singlyLinked.add("节点3");
         singlyLinked.add("节点4");
-        singlyLinked.forEachNode(singlyLinked);
+        singlyLinked.add("节点5");
+//        singlyLinked.forEachNode(singlyLinked);
 
-        singlyLinked.delNode("节点3");
-        singlyLinked.forEachNode(singlyLinked);
+//        singlyLinked.delNode("节点3");
+//        singlyLinked.forEachNode(singlyLinked);
 
-        singlyLinked.insertNode("节点2", "新增节点5");
+//        singlyLinked.insertNode("节点2", "新增节点5");
         singlyLinked.forEachNode(singlyLinked);
-        singlyLinked.findNode("节点2");
+//        singlyLinked.findNode("节点2");
+
+        System.out.println("singlyLinked 反转后 " );
+//        singlyLinked.reverse();
+        singlyLinked.reverseBetween(2, 4);
+        singlyLinked.forEachNode(singlyLinked);
     }
 
     @Test
@@ -49,17 +55,72 @@ public class LinkTest {
         circularLink.showAllNode(circularLink);
     }
 
+    public class ListNode {
+        int val;
+        ListNode next;
+
+        ListNode(int x) {
+            val = x;
+        }
+    }
+
+    public ListNode reverseBetween(ListNode head, int m, int n) {
+        assert head != null;
+        if (m == n) {
+            return head;
+        }
+        if (m > n ) {
+            throw new IllegalArgumentException("m must is more n");
+        }
+        int i = 1;
+        ListNode cur = head;
+        ListNode  pre = null;
+        ListNode newNode = null;
+        ListNode oldTail = null;
+        while (cur != null) {
+            ListNode next = cur.next;
+            if (i >= m && i <= n) {
+                cur.next = pre;
+                pre = cur;
+                if (i == n) {
+                    oldTail = next;
+                }
+            } else if (m > 0 && i == m -1){
+                newNode = cur;
+                newNode.next = null;
+            }
+            cur = next;
+            if (i == n) {
+                break;
+            }
+            i++;
+        }
+        for (; ;) {
+            if (newNode == null) {
+                newNode = pre;
+            } else if (newNode.next == null) {
+                newNode.next = pre;
+            }
+            if (pre.next == null) {
+                pre.next = oldTail;
+                break;
+            }else {
+                pre = pre.next;
+            }
+        }
+        head = newNode;
+        return head;
+    }
+
     @Test
     public void testDoubleLink() {
         List<Long> lists = Arrays.asList(new Long[]{1L, 2L, 3L, 5L});
-        DoubleLink<Long> link = new DoubleLink<>();
-        link.findNodeByIndex(3);
-//        link.poll();
-//        link.poll();
-//        link.poll();
-        link.add(8L);
-        link.add(10L);
-        link.add(11L);
+        ListNode node = new ListNode(3);
+        node.next = new ListNode(5);
+//        node.next.next = new ListNode(3);
+//        node.next.next.next = new ListNode(4);
+//        node.next.next.next.next = new ListNode(5);
+        reverseBetween(node, 1, 2);
     }
 
 }

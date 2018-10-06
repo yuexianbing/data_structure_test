@@ -98,4 +98,113 @@ public class Sort {
         //递归排序基准点右侧的数据
         quickSort(a, right + 1 , hight);
     }
+
+    /**
+     * 选择排序, O(n^2)，最好，最坏，平均O(n^2)
+     *
+     * @param a
+     */
+    public static void chooseSort(int[] a) {
+        if (a == null || a.length < 2) {
+            return;
+        }
+        int tmp, min;
+        for (int i = 0; i < a.length - 1; i++) {
+            min = i;
+            for (int j = i + 1; j < a.length; j++) {
+                if (a[j] < a[min]) {
+                    min = j;
+                }
+            }
+            if (min == i) {
+                continue;
+            }
+            tmp = a[min];
+            a[min] = a[i];
+            a[i] = tmp;
+        }
+    }
+
+    /**
+     * 插入排序, O(n^2)
+     *
+     * @param arr
+     */
+    public static void insertSort(int[] arr) {
+        if (arr == null || arr.length < 2) {
+            return;
+        }
+        int pre , cur;
+        for (int i = 0; i < arr.length; i++) {
+            pre = i - 1;
+            cur = arr[i];
+            while (pre >=0 && arr[pre] > cur) {
+                arr[pre + 1] = arr[pre];
+                pre--;
+            }
+            arr[pre + 1] = cur;
+        }
+    }
+
+    public static void shellSort(int[] arr) {
+        if (arr == null || arr.length < 2) {
+            return;
+        }
+        int temp, j;
+        for (int increment = arr.length / 2; increment > 0; increment /= 2) {
+            for (int i = 0; i < arr.length; i++) {
+                temp = arr[i];
+                for (j = i - increment; j >= 0; j -= increment) {
+                    if (temp < arr[j]) {
+                        arr[j + increment] = arr[j];
+                    } else {
+                        break;
+                    }
+                }
+                arr[j + increment] = temp;
+            }
+        }
+    }
+
+    public static void mergeSort(int[] arr) {
+        if (arr == null || arr.length < 2) {
+            return;
+        }
+        int[] temp = new int[arr.length];
+        sort(arr, 0, arr.length - 1, temp);
+    }
+
+    private static void sort(int[] arr, int left, int right, int[] temp) {
+        if (left >= right) {
+            return;
+        }
+        int mid = (left + right) / 2;
+        sort(arr, left, mid, temp);
+        sort(arr, mid + 1, right, temp);
+        merge(arr, left, right, mid, temp);
+    }
+
+    private static void merge(int[] arr, int left, int right, int mid, int[] temp) {
+        int i = left, j = mid + 1, t = 0;
+        while (i <= mid && j <= right) {
+            if (arr[i] > arr[j]) {
+                temp[t++] = arr[j++];
+            } else {
+                temp[t++] = arr[i++];
+            }
+        }
+
+        while (i <= mid) {
+            temp[t++] = arr[i++];
+        }
+
+        while (j <= right) {
+            temp[t++] = arr[j++];
+        }
+
+        t = 0;
+        while (left <= right) {
+            arr[left++] = temp[t++];
+        }
+    }
 }

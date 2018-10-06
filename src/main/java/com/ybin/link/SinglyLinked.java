@@ -6,6 +6,7 @@ package com.ybin.link;
  */
 public class SinglyLinked {
     Node head;
+    int size = 1;
     public SinglyLinked() {
         head = new Node();
         head.next = null;
@@ -20,6 +21,11 @@ public class SinglyLinked {
             p = p.next;
         }
         p.next = new Node(date);
+        size++;
+    }
+
+    public int size() {
+        return size;
     }
 
     public void delNode(String date) {
@@ -66,6 +72,71 @@ public class SinglyLinked {
             System.out.println("com.ybin.link.Node>>=" + p.next.date);
             p = p.next;
         }
+    }
+
+    /**
+     * 反转链表 leetcode 206
+     *
+     */
+    public void reverse() {
+        if (head == null) {
+            return;
+        }
+        Node cur = head.next;
+        Node pre = null;
+
+        while (cur != null) {
+            Node next = cur.next;
+            cur.next = pre;
+            pre = cur;
+            cur = next;
+        }
+        if (pre != null && head != null) {
+            head.next = pre;
+        }
+    }
+
+    /**
+     * 反转某 2个位置间的链表
+     *
+     * @param m
+     * @param n
+     */
+    public void reverseBetween(int m, int n) {
+        assert head != null;
+        assert m < n;
+        int i = 1;
+        Node cur = head.next;
+        Node  pre = null;
+        Node newNode = cur;
+        Node oldTail = null;
+        while (cur != null) {
+            Node next = cur.next;
+            if (i >= m && i <= n) {
+                cur.next = pre;
+                pre = cur;
+                if (i == n) {
+                    oldTail = next;
+                }
+            } else if (m > 0 && i == m -1){
+                newNode = cur;
+                newNode.next = null;
+            }
+            cur = next;
+            i++;
+        }
+        for (; ;) {
+            if (newNode.next == null) {
+                newNode.next = pre;
+            }
+            if (pre.next == null) {
+                pre.next = oldTail;
+                break;
+            }else {
+                pre = pre.next;
+            }
+        }
+        head.next = newNode;
     }
 
 }

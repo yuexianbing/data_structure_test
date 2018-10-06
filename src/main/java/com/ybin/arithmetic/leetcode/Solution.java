@@ -1,5 +1,6 @@
 package com.ybin.arithmetic.leetcode;
 
+import com.ybin.link.SinglyLinked;
 import org.junit.Test;
 
 /**
@@ -77,15 +78,49 @@ public class Solution {
         }
     }
 
-    public void swap(int[] nums, int a, int b) {
-        int c = nums[a];
-        nums[a] = nums[b];
-        nums[b] = c;
+    public int findKthLargest(int[] nums, int k) {
+        return findK(nums, nums.length-k, 0, nums.length-1);
+    }
+
+    private int findK(int[] nums, int k, int i, int j) {
+        if(i>=j) return nums[i];
+        int m = partition(nums, i, j);
+        if(m==k) return nums[m];
+        else if(m<k) {
+            return findK(nums, k, m+1, j);
+        } else {
+            return findK(nums, k, i, m-1);
+        }
+    }
+
+    private int partition(int[] nums, int i, int j) {
+        int x = nums[i];
+        int m = i;
+        int n = i+1;
+
+        while(n<=j){
+            if(nums[n]<x) {
+                swap(nums, ++m, n);
+            }
+            ++n;
+        }
+        swap(nums,i, m);
+        return m;
+    }
+
+    private void swap(int[] nums, int i, int j) {
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
+    }
+
+    public void reverst(SinglyLinked singlyLinked) {
+
     }
 
     @Test
     public void test() {
-        int[] nums = new int[]{2,0,2,1,1,0};
-        sortColors(nums);
+        int[] nums = new int[]{3,2,3,1,2,4,5,5,6};
+        findKthLargest(nums, 4);
     }
 }
