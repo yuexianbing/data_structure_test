@@ -1,5 +1,7 @@
 package com.ybin.arithmetic;
 
+import java.util.Collections;
+
 /**
  * @author yuebing
  * @version 1.0 2018/4/8
@@ -66,16 +68,16 @@ public class Sort {
      *
      * @param a
      * @param low
-     * @param hight
+     * @param height
      */
-    public static void quickSort(int[] a, int low, int hight) {
+    public static void quickSort(int[] a, int low, int height) {
         if (a == null || a.length == 0) {
             return;
         }
-        if (low >= hight) {
+        if (low >= height) {
             return;
         }
-        int left = low, right = hight, key = a[low], tmp;
+        int left = low, right = height, key = a[low], tmp;
         //第一次循环的时候找出数组在基准点左右侧的数据
         while (left < right) {
             while (left < right && a[right] >= key) {
@@ -96,7 +98,36 @@ public class Sort {
         //递归排序基准点左侧的数据
         quickSort(a, low, right - 1);
         //递归排序基准点右侧的数据
-        quickSort(a, right + 1 , hight);
+        quickSort(a, right + 1 , height);
+    }
+
+    public void quick(int[] a, int low, int height) {
+        if (a == null || a.length == 0) {
+            return;
+        }
+        if (low >= height) {
+            return;
+        }
+        int key = a[low], left = low, right = height, tmp;
+        for (; left < right;) {
+            while (left <= right && a[right] >= key) {
+                right--;
+            }
+            while (left <= right && a[left] <= key) {
+                left++;
+            }
+            if (left < right) {
+                tmp = a[left];
+                a[left] = a[right];
+                a[right] = tmp;
+            }
+        }
+
+        a[low] = a[left];
+        a[left] = key;
+
+        quick(a, low, right - 1);
+        quick(a, right + 1, height);
     }
 
     /**
