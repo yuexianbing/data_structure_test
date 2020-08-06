@@ -41,7 +41,7 @@ public class SortTest {
 
     @Test
     public void shellSortTest() {
-        int[] arr = new int[]{15, -1, 22, 10, 0, 17, 13};
+        int[] arr = new int[]{15, -1, 22, 10, 0, 17, 13, 9, 10, 11, 14, 6};
         Sort.mergeSort(arr);
         for (int a : arr) {
             System.out.println(a);

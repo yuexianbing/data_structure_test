@@ -212,11 +212,12 @@ public class Sort {
         int mid = (left + right) / 2;
         sort(arr, left, mid, temp);
         sort(arr, mid + 1, right, temp);
-        merge(arr, left, right, mid, temp);
+        merge(arr, left, right, mid);
     }
 
-    private static void merge(int[] arr, int left, int right, int mid, int[] temp) {
+    private static void merge(int[] arr, int left, int right, int mid) {
         int i = left, j = mid + 1, t = 0;
+        int[] temp = new int[right - left + 1];
         while (i <= mid && j <= right) {
             if (arr[i] > arr[j]) {
                 temp[t++] = arr[j++];
@@ -225,16 +226,17 @@ public class Sort {
             }
         }
 
-        while (i <= mid) {
-            temp[t++] = arr[i++];
+        int start = i, end = mid;
+        if (j <= right) {
+            start = j;
+            end = right;
+        }
+        while (start <= end) {
+            temp[t++] = arr[start++];
         }
 
-        while (j <= right) {
-            temp[t++] = arr[j++];
-        }
-
-        t = 0;
-        while (left <= right) {
+        t =0;
+        while (t < temp.length) {
             arr[left++] = temp[t++];
         }
     }
