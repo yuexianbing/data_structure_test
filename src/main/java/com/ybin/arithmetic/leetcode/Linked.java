@@ -39,6 +39,12 @@ public class Linked {
         }
     }
 
+    /**
+     * 链表回文
+     *
+     * @param head
+     * @return
+     */
     public boolean plalind(Node head) {
         if (head == null || head.next == null) {
             return false;

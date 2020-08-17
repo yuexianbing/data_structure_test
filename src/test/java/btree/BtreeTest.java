@@ -24,7 +24,9 @@ public class BtreeTest {
         btree.add(9);
         btree.add(12);
         btree.add(2);
+        btree.add(1);
 
-        btree.show();
+
+        btree.bstMaxSize(btree.getRoot());
     }
 }
