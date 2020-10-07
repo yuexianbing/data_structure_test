@@ -1,5 +1,7 @@
 package com.ybin.arithmetic.leetcode;
 
+import com.ybin.link.Node;
+
 /**
  * @author : bing.yue001
  * @version : 1.0
@@ -8,36 +10,6 @@ package com.ybin.arithmetic.leetcode;
  */
 public class Linked {
 
-    public class Node {
-
-        private int data;
-        private Node pre;
-        private Node next;
-
-        public int getData() {
-            return data;
-        }
-
-        public void setData(int data) {
-            this.data = data;
-        }
-
-        public Node getPre() {
-            return pre;
-        }
-
-        public void setPre(Node pre) {
-            this.pre = pre;
-        }
-
-        public Node getNext() {
-            return next;
-        }
-
-        public void setNext(Node next) {
-            this.next = next;
-        }
-    }
 
     /**
      * 链表回文
@@ -46,24 +18,24 @@ public class Linked {
      * @return
      */
     public boolean plalind(Node head) {
-        if (head == null || head.next == null) {
+        if (head == null || head.getNext() == null) {
             return false;
         }
         Node n1 = head;
         Node n2 = head;
-        while (n2.next != null && n2.next.next != null) {
-            n1 = n1.next;
-            n2 = n2.next.next;
+        while (n2.getNext() != null && n2.getNext().next != null) {
+            n1 = n1.getNext();
+            n2 = n2.getNext().getNext();
         }
-        Node n3 = n1.next;
-        n1.next = null;
+        Node n3 = n1.getNext();
+        n1.setNext(null);
 
         Node pre;
         Node next;
         while (n3 != null) {
-            next = n3.next;
+            next = n3.getNext();
             pre = n3;
-            n3.next = pre;
+            n3.setNext(pre);
             n3 = next;
         }
 
@@ -190,5 +162,60 @@ public class Linked {
             }
         }
         return null;
+    }
+
+    public Node segmentation(Node node, int x) {
+        if (node == null) {
+            return node;
+        }
+        Node cur = node.next;
+        Node pre = null;
+        Node preHead = null;
+        Node after = null;
+        Node afterHead = null;
+        Node equ = null;
+        while (cur != null) {
+            Node ne = new Node(cur.data);
+            if ((int)cur.data > x) {
+
+                if (after == null) {
+                    after = ne;
+                    afterHead = after;
+                } else {
+                    after.next = ne;
+                    after = after.next;
+                }
+            } else if ((int)cur.data < x){
+                if (pre == null) {
+                    pre = ne;
+                    preHead = pre;
+                } else {
+                    pre.next = ne;
+                    pre = pre.next;
+                }
+            } else {
+                equ = cur;
+            }
+            cur = cur.next;
+        }
+        Node newNode = null;
+        if (pre != null) {
+            if (equ != null) {
+                pre.next = equ;
+                equ.next = afterHead;
+            } else {
+                pre.next = afterHead;
+            }
+            newNode = preHead;
+        } else {
+            if (equ != null) {
+                equ.next = afterHead;
+                newNode = equ;
+            } else {
+                newNode = afterHead;
+            }
+        }
+        newNode.print();
+        return newNode;
     }
 }

@@ -1,5 +1,6 @@
 package link;
 
+import com.ybin.arithmetic.leetcode.Linked;
 import com.ybin.link.CircularLink;
 import com.ybin.link.DoubleLink;
 import com.ybin.link.SinglyLinked;
@@ -19,11 +20,12 @@ public class LinkTest {
     @Test
     public void testSinglyLink() {
         SinglyLinked singlyLinked = new SinglyLinked();
-        singlyLinked.add("节点1");
-        singlyLinked.add("节点2");
-        singlyLinked.add("节点3");
-        singlyLinked.add("节点4");
-        singlyLinked.add("节点5");
+        singlyLinked.add(1);
+        singlyLinked.add(4);
+        singlyLinked.add(3);
+        singlyLinked.add(2);
+        singlyLinked.add(5);
+        singlyLinked.add(2);
 //        singlyLinked.forEachNode(singlyLinked);
 
 //        singlyLinked.delNode("节点3");
@@ -35,8 +37,9 @@ public class LinkTest {
 
         System.out.println("singlyLinked 反转后 " );
 //        singlyLinked.reverse();
-        singlyLinked.reverseBetween(2, 4);
-        singlyLinked.forEachNode(singlyLinked);
+//        singlyLinked.reverseBetween(2, 4);
+//        singlyLinked.forEachNode(singlyLinked);
+        new Linked().segmentation(singlyLinked.getHead(), 3);
     }
 
     @Test

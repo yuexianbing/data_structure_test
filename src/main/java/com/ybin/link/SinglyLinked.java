@@ -4,14 +4,14 @@ package com.ybin.link;
  * @author yuebing
  * @version 1.0 2017/9/4
  */
-public class SinglyLinked {
+public class SinglyLinked<T> {
     Node head;
     int size = 1;
     public SinglyLinked() {
         head = new Node();
         head.next = null;
     }
-    public void add(String date) {
+    public void add(T date) {
         if (head == null) {
             this.head = new Node();
             head.next = null;
@@ -24,6 +24,10 @@ public class SinglyLinked {
         size++;
     }
 
+    public Node getHead() {
+        return head;
+    }
+
     public int size() {
         return size;
     }
@@ -31,7 +35,7 @@ public class SinglyLinked {
     public void delNode(String date) {
         Node p = head;
         while (p.next != null) {
-            if (p.next.date.equals(date)) {
+            if (p.next.data.equals(date)) {
                 p.next = p.next.next;
                 break;
             } else {
@@ -43,7 +47,7 @@ public class SinglyLinked {
     public void insertNode(String perDate, String date) {
         Node p = head;
         while (p.next != null) {
-            if (p.next.date.equals(perDate)) {
+            if (p.next.data.equals(perDate)) {
                 Node insetNode = new Node(date);
                 insetNode.next = p.next;
                 p.next = insetNode;
@@ -57,7 +61,7 @@ public class SinglyLinked {
     public Node findNode(String date) {
         Node p = head;
         while (p.next != null) {
-            if (p.next.date.equals(date)) {
+            if (p.next.data.equals(date)) {
                 return p.next;
             } else {
                 p = p.next;
@@ -69,7 +73,7 @@ public class SinglyLinked {
     public void forEachNode(SinglyLinked singlyLinked) {
         Node p = singlyLinked.head;
         while (p.next != null) {
-            System.out.println("com.ybin.link.Node>>=" + p.next.date);
+            System.out.println("com.ybin.link.Node>>=" + p.next.data);
             p = p.next;
         }
     }

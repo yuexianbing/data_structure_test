@@ -1,6 +1,9 @@
 package com.ybin.arithmetic.leetcode;
 
+import java.util.ArrayDeque;
 import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Stack;
 
 /**
  * @author : bing.yue001
@@ -29,7 +32,7 @@ public class RollingWindow {
                 likedList.poll();
             }
             likedList.offerLast(i);
-            if (i >= num - 1) {
+            if (arr[i] >= num) {
                 res[index ++] = arr[likedList.peekFirst()];
                 if (likedList.peekFirst() == i - num + 1 ) {
                     likedList.poll();
@@ -80,6 +83,31 @@ public class RollingWindow {
 
         }
         return total;
+    }
+
+    /**
+     * 给定一个绳子的长度为k,有序数组arr,求k能覆盖数组的最大元素
+     *
+     * @param arr
+     * @param k
+     * @return
+     */
+    public int process(int[] arr, int k) {
+        if (arr.length == 0 && k < 1) {
+            return 0;
+        }
+
+        int result = 0;
+        int left = 0;
+        int right = 0;
+        while (left < arr.length) {
+            while (right < arr.length && (arr[right] - arr[left] <= k)) {
+                right++;
+            }
+            result = Math.max(result, right - left);
+            left++;
+        }
+        return result;
     }
 
     public static void main(String[] args) {

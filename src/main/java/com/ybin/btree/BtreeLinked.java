@@ -15,7 +15,7 @@ import java.util.Queue;
 @Data
 public class BtreeLinked<T> {
 
-    private static class Node<T> {
+    public static class Node<T> {
 
         /**
          * 数据域
@@ -30,8 +30,35 @@ public class BtreeLinked<T> {
          */
         private Node rightNode;
 
-        Node(int item) {
+        public Node(int item) {
             this.item = item;
+        }
+        public Node() {
+
+        }
+
+        public int getItem() {
+            return item;
+        }
+
+        public void setItem(int item) {
+            this.item = item;
+        }
+
+        public Node getLeftNode() {
+            return leftNode;
+        }
+
+        public void setLeftNode(Node leftNode) {
+            this.leftNode = leftNode;
+        }
+
+        public Node getRightNode() {
+            return rightNode;
+        }
+
+        public void setRightNode(Node rightNode) {
+            this.rightNode = rightNode;
         }
     }
 
@@ -40,9 +67,15 @@ public class BtreeLinked<T> {
     public BtreeLinked(int t) {
         root = new Node(t);
     }
+    public BtreeLinked() {
+    }
 
     public boolean add(int t) {
         Node r = root;
+        if (r == null) {
+            root = new Node(t);
+            return true;
+        }
         Node newNode = new Node(t);
         for (; ;) {
             if (r.item > t) {
@@ -180,7 +213,9 @@ public class BtreeLinked<T> {
     }
 
     /**
+     * 二叉搜索树(BST)
      * 查找已node为头节点的子树中,满足搜索树的所有节点之和
+     * 左树不能空,则左数的节点都小于其根节点;右树不能空,则右树的节点都大于根节点
      *
      * @param node
      * @return
