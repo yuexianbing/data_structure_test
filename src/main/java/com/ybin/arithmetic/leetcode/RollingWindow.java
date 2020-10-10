@@ -1,9 +1,6 @@
 package com.ybin.arithmetic.leetcode;
 
-import java.util.ArrayDeque;
 import java.util.LinkedList;
-import java.util.Queue;
-import java.util.Stack;
 
 /**
  * @author : bing.yue001
@@ -113,6 +110,6 @@ public class RollingWindow {
     public static void main(String[] args) {
         int arr[] = new int[]{1,2,1,3,4,6,5,4};
         // 3 4 5 6 6
-        System.out.printf("dawda" + new RollingWindow().roll2(arr, 3));
+        System.out.printf("dawda" + new RollingWindow().process(arr, 3));
     }
 }

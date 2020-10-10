@@ -14,132 +14,13 @@ import java.util.Stack;
  */
 public class DynamicPlanning {
 
-    /**
-     * 给定一个可包含重复数字的序列，返回所有不重复的全排列
-     * 输入: [1,1,2]
-     * 输出:
-     * [
-     * [1,1,2],
-     * [1,2,1],
-     * [2,1,1]
-     * ]
-     *
-     */
-    public List<List<Integer>> getAll(int[] arr) {
-        List<List<Integer>> result = new ArrayList<>();
-        if (arr.length == 1) {
-            result.add(new ArrayList<>(arr[0]));
-            return result;
-        }
-        int[] used = new int[arr.length];
-        dfs(arr, result, new LinkedList<>(), used);
-        return result;
-    }
-
-
-    public void dfs(int arr[], List<List<Integer>> result, Deque<Integer> path, int[] used) {
-        if (path.size() == arr.length) {
-            result.add(new ArrayList<>(path));
-            return;
-        }
-        for (int i = 0; i < arr.length; i ++) {
-
-            if (used[i] == 1) {
-                continue;
-            }
-            path.addLast(arr[i]);
-            used[i] = 1;
-            dfs(arr, result, path, used);
-            used[i] = 0;
-            path.removeLast();
-        }
-    }
-
-    /**
-     * 逆序栈
-     * 先递归到栈低,删除元素并返回
-     * 在递归中处理删除的元素添加,3是栈底拿出的元素,则会放到最后添加
-     *
-     * @param stack
-     */
-    public void reversal(Stack<Integer> stack) {
-        if (stack.size() == 0) {
-            return;
-        }
-        int result = get(stack);
-        reversal(stack);
-        stack.push(result);
-    }
-
-
-
-    private int get(Stack<Integer> stack) {
-        int result = stack.pop();
-        if (stack.empty()) {
-            return result;
-        } else {
-            int last = get(stack);
-            stack.push(result);
-            return last;
-        }
-    }
 
 
     /**
-     * 求字符串能拼接的子序列,basecase = index == 数组长度
-     *
-     * @param s
-     * @return
-     */
-    public List<String> process(String s) {
-        List<String> result = new ArrayList<>();
-        if (s == null || s.length() == 1) {
-            return result;
-        }
-        process1(s.toCharArray(), result, "", 0);
-        return result;
-    }
-
-    private void process1(char[] c, List<String> result, String path, int index) {
-        if (index == c.length) {
-            result.add(path);
-            return;
-        }
-
-        process1(c, result, path, index + 1);
-
-        // 要当前
-        path = path + c[index];
-        process1(c, result, path, index + 1);
-    }
-
-    public void verifyBracket(String bracket) {
-        if (bracket == null) {
-            return;
-        }
-        char[] c = bracket.toCharArray();
-        int left = 0;
-        int right = 0;
-        for (char aC : c) {
-            if ("(".equals(String.valueOf(aC))) {
-                left++;
-            } else {
-                right++;
-            }
-        }
-        int result = left - right;
-        if (result < 0) {
-            System.out.println("还需要左括号:" + Math.abs(result));
-        } else if (result > 0) {
-            System.out.println("还需要右括号:" + result);
-        } else {
-            System.out.println("成功匹配");
-        }
-    }
-
-    /**
-     * com.ybin.arithmetic.leetcode.ViolenceRecursion#process(int[], int[], int, int, int)
+     * @see com.ybin.arithmetic.leetcode.ViolenceRecursion#backage
      * 背包问题
+     * 建立对应暴力递归从index出发到wight的二维表
+     * basecase 是index=arr.length时返回0,所以二维表的最后一行都是0
      *
      * @param a
      * @param b
@@ -165,6 +46,83 @@ public class DynamicPlanning {
             }
         }
         return dpWay[0][wight];
+    }
+
+    /**
+     * @see ViolenceRecursion#takeScore(int[])
+     * 动态规划
+     *
+     * @param arr
+     * @return
+     */
+    public int takeScore(int[] arr) {
+        if (arr == null) {
+            return 0;
+        }
+        int[][] firstDp = new int[arr.length][arr.length];
+        int[][] secondDp = new int[arr.length][arr.length];
+
+        for (int i = 0; i < arr.length; i++) {
+            for (int j = 0; j < arr.length; j++) {
+                firstDp[i][j] = -1;
+            }
+        }
+        for (int i = arr.length - 1; i >= 0; i--) {
+            for (int j = 1; j < arr.length; j++) {
+                firstDp[i][j] = Math.max(arr[i] + firstDp[i + 1][j], arr[j] + firstDp[i][j - 1]);
+                secondDp[i][j] = Math.min(secondDp[i+1][j], secondDp[i][j-1]);
+            }
+        }
+
+        return Math.max(firstDp[0][arr.length], secondDp[0][arr.length]);
+    }
+
+    /**
+     * C.已参数1做行,参数2做列
+     * 字符串a的长度代表有多少行,b的长度代表有多少列,每一个空格代表到该位置的最长公共子序列的长度
+     * 求 a,b的最长公共子序列
+     *
+     * @param a
+     * @param b
+     * @return
+     */
+    public int subString(String a, String b) {
+        if (a == null || b == null) {
+            return 0;
+        }
+        int[][] dp = new int[a.length()][b.length()];
+        char[] acs = a.toCharArray();
+        char[] bcs = b.toCharArray();
+        // 第一行因为只会出现一个acs的首字母,所以如果在bcs中找到了相同的,则从找到的位置开始,所以的值都为1
+        for (int i = 0; i < bcs.length; i++) {
+            if (i == 0) {
+                dp[0][i] = acs[0] == bcs[i] ? 1 : 0;
+            } else {
+                dp[0][i] = Math.max(acs[0] == bcs[i] ? 1 : 0 , dp[0][i - 1]);
+            }
+        }
+        for (int j = 0; j < acs.length; j++) {
+            if (j == 0) {
+                dp[j][0] = bcs[0] == acs[j] ? 1 : 0;
+            } else {
+                dp[j][0] = Math.max(bcs[0] == acs[j] ? 1 : 0 , dp[j - 1][0]);
+            }
+        }
+        // 对于row,cl位置
+        // 场景1：最长公共子串即不已row结尾也不已cl结尾
+        // 场景2：最长公共子串已row结尾但不已cl结尾
+        // 场景3：最长公共子串不已row结尾但已cl结尾
+        // 场景3：最长公共子串已row结尾且已cl结尾,此时acs[row]=bcs[cl],且等于1+acs[row-1][cl-1]
+        for (int row = 1; row < acs.length; row++) {
+            for (int cl = 1; cl < bcs.length; cl++) {
+                dp[row][cl] = Math.max(dp[row - 1][cl - 1], dp[row - 1][cl]);
+                dp[row][cl] = Math.max(dp[row][cl], dp[row][cl - 1]);
+                if (acs[row] == bcs[cl]) {
+                    dp[row][cl] = Math.max(dp[row][cl], 1 + dp[row - 1][cl]);
+                }
+            }
+        }
+        return dp[acs.length - 1][bcs.length - 1];
     }
 
 }

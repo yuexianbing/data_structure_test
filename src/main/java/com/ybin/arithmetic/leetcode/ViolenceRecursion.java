@@ -1,13 +1,14 @@
 package com.ybin.arithmetic.leetcode;
 
 import com.ybin.btree.BtreeLinked;
-import com.ybin.link.Node;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Deque;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
+import java.util.Map;
+import java.util.Stack;
 
 /**
  * @author : bing.yue001
@@ -18,6 +19,8 @@ import java.util.Queue;
 public class ViolenceRecursion {
 
     /**
+     * A.暴力递归,自顶向下的尝试
+     *
      * 给定一个数字,其中每一位字符能转换为具体的字母，1->A,2->B,3->C....26->Z
      * 求该字符数组最多能转换成字母拼接的字符串的数量
      *
@@ -58,6 +61,132 @@ public class ViolenceRecursion {
     }
 
     /**
+     * 给定一个可包含重复数字的序列，返回所有不重复的全排列
+     * 输入: [1,1,2]
+     * 输出:
+     * [
+     * [1,1,2],
+     * [1,2,1],
+     * [2,1,1]
+     * ]
+     *
+     */
+    public List<List<Integer>> getAll(int[] arr) {
+        List<List<Integer>> result = new ArrayList<>();
+        if (arr.length == 1) {
+            result.add(new ArrayList<>(arr[0]));
+            return result;
+        }
+        int[] used = new int[arr.length];
+        dfs(arr, result, new LinkedList<>(), used);
+        return result;
+    }
+
+
+    public void dfs(int arr[], List<List<Integer>> result, Deque<Integer> path, int[] used) {
+        if (path.size() == arr.length) {
+            result.add(new ArrayList<>(path));
+            return;
+        }
+        for (int i = 0; i < arr.length; i ++) {
+
+            if (used[i] == 1) {
+                continue;
+            }
+            path.addLast(arr[i]);
+            used[i] = 1;
+            dfs(arr, result, path, used);
+            // 回溯,还原现场
+            used[i] = 0;
+            path.removeLast();
+        }
+    }
+
+    /**
+     * 逆序栈
+     * 先递归到栈低,删除元素并返回
+     * 在递归中处理删除的元素添加,3是栈底拿出的元素,则会放到最后添加
+     *
+     * @param stack
+     */
+    public void reversal(Stack<Integer> stack) {
+        if (stack.size() == 0) {
+            return;
+        }
+        int result = get(stack);
+        reversal(stack);
+        stack.push(result);
+    }
+
+
+
+    private int get(Stack<Integer> stack) {
+        int result = stack.pop();
+        if (stack.empty()) {
+            return result;
+        } else {
+            int last = get(stack);
+            stack.push(result);
+            return last;
+        }
+    }
+
+
+    /**
+     * 求字符串能拼接的子序列,basecase = index == 数组长度
+     *
+     * @param s
+     * @return
+     */
+    public List<String> process1(String s) {
+        List<String> result = new ArrayList<>();
+        if (s == null || s.length() == 1) {
+            return result;
+        }
+        process1(s.toCharArray(), result, "", 0);
+        return result;
+    }
+
+    private void process1(char[] c, List<String> result, String path, int index) {
+        if (index == c.length) {
+            result.add(path);
+            return;
+        }
+        // 不要当前
+        process1(c, result, path, index + 1);
+
+        // 要当前
+        path = path + c[index];
+        process1(c, result, path, index + 1);
+    }
+
+    public void verifyBracket(String bracket) {
+        if (bracket == null) {
+            return;
+        }
+        char[] c = bracket.toCharArray();
+        int left = 0;
+        int right = 0;
+        for (char aC : c) {
+            if ("(".equals(String.valueOf(aC))) {
+                left++;
+            } else {
+                right++;
+            }
+        }
+        int result = left - right;
+        if (result < 0) {
+            System.out.println("还需要左括号:" + Math.abs(result));
+        } else if (result > 0) {
+            System.out.println("还需要右括号:" + result);
+        } else {
+            System.out.println("成功匹配");
+        }
+    }
+
+    /**
+     * A.暴力递归,自顶向下的尝试
+     *
      * 两个数组,a表示背包的重量,b表示对应背包的价值;
      * 一个人最多拿wight重量的货物,求怎么计算才能获得最大价值的货物
      *
@@ -105,6 +234,8 @@ public class ViolenceRecursion {
     }
 
     /**
+     * A.暴力递归,范围上的尝试,从一个数组的头和尾分别获取
+     *
      * 给定n张排,每张牌代表一个分数,A,B两人从牌中拿取分数,A先拿,且两人必须从两端拿
      * 求A,B两人拿完牌后的最大分数
      *
@@ -231,7 +362,7 @@ public class ViolenceRecursion {
     }
 
     /**
-     * 有n个格子,每次只能走一个,从m格子触发走k步到达p格子
+     * 有n个格子,每次只能走一个,从m格子出发走k步到达p格子
      * 求有多少种走法
      *
      * @param n
@@ -280,30 +411,42 @@ public class ViolenceRecursion {
      *
      * @param args
      */
-    public List<List<String>> queen(int n) {
+    public List<String[][]> queen(int n) {
         int[] record = new int[n];
-        List<List<String>> result = new ArrayList<>();
-        queen(n, 0, new LinkedList<>(), result, record);
+        List<String[][]> result = new ArrayList<>();
+        String[][] cr = new String[n][n];
+        for (int row = 0; row < cr.length; row++) {
+            for (int col = 0; col < cr.length; col++) {
+                cr[row][col] = ".";
+            }
+        }
+        queen(n, 0, cr, result, record);
         return result;
     }
 
-    private void queen(int n, int row, Queue<String> path1, List<List<String>> result, int[] record) {
+    private void queen(int n, int row, String[][] cr, List<String[][]> result, int[] record) {
         if (row == n) {
-            result.addAll(new ArrayList(path1));
-
+            String[][] cr1 = new String[n][n];
+            for (int r = 0; r < cr1.length; r++) {
+                for (int c = 0; c < cr1.length; c++) {
+                    cr1[r][c] = cr[r][c];
+                }
+            }
+            result.add(cr1);
             return;
         }
 
+
         for (int col = 0; col < n; col++) {
             if (this.isT(row, record, col)) {
-                path1.offer(".");
                 continue;
             }
-            path1.offer("*");
-            record[row] = col;
-            queen(n, row + 1, path1, result, record);
-            path1.remove();
+            System.out.println("第几行:" + row + "第几列:" + col);
+            cr[row][col] = "*";
 
+            record[row] = col;
+            queen(n, row + 1, cr, result, record);
+            cr[row][col] = ".";
         }
     }
 
@@ -316,9 +459,133 @@ public class ViolenceRecursion {
         return false;
     }
 
+    /**
+     * 给定数组arr,数组中的值代表货币的面值,给定money钱数,从数组中每种面值货币都可以获得任意数量,求能获得money钱数的可能数
+     *
+     * @param arr
+     * @param money
+     * @return
+     */
+    public int money(int[] arr, int money) {
+        if (arr == null || money == 0) {
+            return 0;
+        }
+        int[][] dp = new int[arr.length + 1][money + 1];
+        for (int i = 0; i < dp.length; i++) {
+            for (int j = 0; j < dp[i].length; j++) {
+                dp[i][j] = -1;
+            }
+        }
+        return money(arr, 0, money, dp);
+    }
+
+    private int money(int[] arr, int index, int rest, int[][] dp) {
+        if (dp[index][rest] != -1) {
+            return dp[index][rest];
+        }
+        if (index == arr.length) {
+            dp[index][rest] = rest == 0 ? 1 : 0;
+            return dp[index][rest];
+        }
+
+        int result = 0;
+        for (int count = 0;  count * arr[index] <= rest; count++) {
+            result += money(arr, index + 1, rest - count * arr[index], dp);
+            dp[index][rest] = result;
+        }
+        return dp[index][rest];
+    }
+
+    public int money1(int arr[], int money) {
+        if (arr == null || money == 0) {
+            return 0;
+        }
+        int[][] dp = new int[arr.length + 1][money + 1];
+        dp[arr.length][0] = 1;
+        for (int i = arr.length - 1; i >= 0; i--) {
+            for (int rest = 0; rest <= money; rest++) {
+                int result = dp[i + 1][rest];
+//                for (int count = 0;  count * arr[i] <= rest; count++) {
+//                    result += dp[i + 1][rest - count * arr[i]];
+//                }
+                // 替换枚举行为,每一个格子依赖同一列下一行的格子+同一行前一个间隔的格子之和
+                if (rest - arr[i] >= 0) {
+                    result += dp[i][rest - arr[i]];
+                }
+
+                dp[i][rest] = result;
+            }
+        }
+        return dp[0][money];
+    }
+
+    /**
+     * 给定目标字符串,在给定一个贴纸字符串,贴纸字符串中的每一个贴纸能剪切成单独的字符,字符能组成,目标字符串中的一个字符,
+     * 求能拼接出目标字符串,所需要的最少贴纸数
+     *
+     * @param target
+     * @param pasters
+     * @return
+     */
+    public int paster(String target, String[] pasters) {
+        if (target == null || pasters == null || target == "") {
+            return 0;
+        }
+        // 贴纸字符串转换为每个贴纸字符出现的词频
+        int[][] pasterMap = new int[pasters.length][26];
+        for (int i = 0; i < pasters.length; i++) {
+            char[] paster = pasters[i].toCharArray();
+            for (int j = 0; j < paster.length; j++) {
+                pasterMap[i][paster[j] - 'a']++;
+            }
+        }
+        Map<String, Integer> restString = new HashMap<>();
+        restString.put("", 0);
+        return paster(restString, pasterMap, target);
+    }
+
+    private int paster(Map<String, Integer> restString, int[][] pasterMap, String rest) {
+        if (restString.containsKey(rest)) {
+            return restString.get(rest);
+        }
+        // 剩余字符串转换词频
+        int[] tempMap = new int[26];
+        for (char c : rest.toCharArray()) {
+            tempMap[c - 'a']++;
+        }
+        int ans = Integer.MAX_VALUE;
+
+        for (int cow = 0; cow < pasterMap.length; cow++) {
+            if (pasterMap[cow][rest.toCharArray()[0] - 'a'] == 0 ) {
+                continue;
+            }
+            StringBuilder sb = new StringBuilder();
+            for (int cl = 0; cl < tempMap.length; cl++) {
+                if (tempMap[cl] == 0) {
+                    continue;
+                }
+                if (pasterMap[cow][cl] - tempMap[cl] < 0) {
+                    for (int k = 0; k < tempMap[cl] - pasterMap[cow][cl]; k++) {
+                        sb.append((char)(cl + 'a'));
+                    }
+
+                }
+
+            }
+            int re = paster(restString, pasterMap, sb.toString());
+            if (re != -1) {
+                // 1张贴纸+剩余的需要的贴纸数
+                ans = Math.min(ans, 1 + re);
+            }
+        }
+        restString.put(rest, ans == Integer.MAX_VALUE ? -1 : ans);
+        return restString.get(rest);
+    }
+
 
 
     public static void main(String[] args) {
-        new ViolenceRecursion().queen(4);
+        new ViolenceRecursion().paster("babac", new String[]{"ba", "c", "abcd"});
+
     }
 }
