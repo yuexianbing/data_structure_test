@@ -57,19 +57,19 @@ public class RollingWindow {
         LinkedList<Integer> minLinked = new LinkedList<>();
         for (int i = 0; i < arr.length; i++) {
             int r = i;
-            for (; r < arr.length; r++) {
-                while (maxLinked.peekLast() != null && arr[maxLinked.peekLast()] <= arr[r]) {
-                    maxLinked.poll();
-                }
-                maxLinked.offerLast(r);
-                while (minLinked.peekLast() != null && arr[minLinked.peekLast()] >= arr[r]) {
-                    minLinked.poll();
-                }
-                minLinked.offerLast(r);
-                if (arr[maxLinked.peekFirst()] - arr[minLinked.peekFirst()] > num) {
-                    break;
-                }
+
+            while (maxLinked.peekLast() != null && arr[maxLinked.peekLast()] <= arr[r]) {
+                maxLinked.poll();
             }
+            maxLinked.offerLast(r);
+            while (minLinked.peekLast() != null && arr[minLinked.peekLast()] >= arr[r]) {
+                minLinked.poll();
+            }
+            minLinked.offerLast(r);
+            if (arr[maxLinked.peekFirst()] - arr[minLinked.peekFirst()] > num) {
+                break;
+            }
+
             if (maxLinked.peekFirst() == i) {
                 maxLinked.poll();
             }
