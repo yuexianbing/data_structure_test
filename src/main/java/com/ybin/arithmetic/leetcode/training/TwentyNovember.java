@@ -5,6 +5,7 @@ import com.ybin.link.Node;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.PriorityQueue;
 
 /**
  * @author : bing.yue001
@@ -221,6 +222,13 @@ public class TwentyNovember {
         return result == Integer.MAX_VALUE ? -1 : result;
     }
 
+    /**
+     * 给定链表 1>2>3>4>5>6
+     * 转换后:1>6>2>5>3>4
+     *
+     * @param node
+     * @return
+     */
     public Node reorderList(Node node) {
         if (node == null) {
             return node;
@@ -262,6 +270,139 @@ public class TwentyNovember {
             cur2 = t2;
         }
         return head;
+    }
+
+    /**
+     * 给定一个数组,假定数组元素值代表高度,宽度是1,则可以组成一个矩形列,如果i位置的左边与右边均比i高,则i可以放入水,
+     * Math.min(maxLeft, MaxRight) - i求能放入多少水
+     *
+     * 双指针法
+     * 6 7 2 7 8 5 9
+     * @param arr
+     * @return
+     */
+    public int water(int[] arr) {
+        if (arr == null) {
+            return 0;
+        }
+        int leftMax = arr[0];
+        int rightMax = arr[arr.length - 1];
+        int left = 1;
+        int right = arr.length - 2;
+        int water = 0;
+        while (left <= right) {
+            if (leftMax <= rightMax) {
+                water += Math.max(0, arr[left] - leftMax);
+                leftMax = Math.max(leftMax, arr[left++]);
+            } else {
+                water += Math.max(0, arr[right] - rightMax);
+                rightMax = Math.max(rightMax, arr[right--]);
+            }
+        }
+        return water;
+    }
+
+    private class ArrayNode {
+        private Integer value;
+        private int row;
+        private int col;
+
+        public ArrayNode(Integer value, int row, int col) {
+            this.value = value;
+            this.row = row;
+            this.col = col;
+        }
+
+        public Integer getValue() {
+            return value;
+        }
+
+        public void setValue(Integer value) {
+            this.value = value;
+        }
+
+        public int getRow() {
+            return row;
+        }
+
+        public void setRow(int row) {
+            this.row = row;
+        }
+
+        public int getCol() {
+            return col;
+        }
+
+        public void setCol(int col) {
+            this.col = col;
+        }
+    }
+
+
+    public int water1(int[][] arr) {
+        if (arr == null) {
+            return 0;
+        }
+        // 1.四边放入小根堆,和已放入标识boolean数组;
+        PriorityQueue<ArrayNode> priorityQueue = new PriorityQueue<>();
+        boolean[][] isEn = new boolean[arr.length][arr[0].length];
+        // 第一行
+        for (int i = 0; i < arr[0].length; i++) {
+            priorityQueue.add(new ArrayNode(arr[0][i], 0, i));
+            isEn[0][i] = true;
+        }
+        // 最后一列
+        for (int i = 0; i < arr.length; i++) {
+            priorityQueue.add(new ArrayNode(arr[i][arr.length - 1], i, arr.length - 1));
+            isEn[i][arr.length - 1] = true;
+        }
+        // 最后一行
+        for (int i = 0; i < arr[arr.length - 1].length; i++) {
+            priorityQueue.add(new ArrayNode(arr[arr.length - 1][i], arr.length - 1, i));
+            isEn[arr.length - 1][i] = true;
+        }
+        for (int i = 0; i < arr.length; i++) {
+            priorityQueue.add(new ArrayNode(arr[i][0], i, 0));
+            isEn[i][0] = true;
+        }
+        int water = 0;
+        int curMin = 0;
+        // 2.从小顶堆弹出堆顶,从弹出的元素位置出发,计算上下左右,如果在boolean数组存在则不计算,
+        // 利用优先级队列,每次让人的元素,栈顶最小,依次弹出,求其上下左右能不能把水留出去,每次都是最小值向外扩
+        while (!priorityQueue.isEmpty()) {
+            ArrayNode node = priorityQueue.poll();
+            curMin = Math.max(node.value, curMin);
+            int row = node.getRow();
+            int col = node.getCol();
+            // 如果不存在则将该点放入,并一次向上下左右扩散,直到队列为空;
+            // 上
+            if (row + 1 < arr.length && !isEn[row + 1][col]) {
+                // 3.每次放入堆的时候结算,更新最大值,并用最大值-相邻元素
+                water += Math.max(0, curMin - arr[row + 1][col]);
+                isEn[row + 1][col] = true;
+                priorityQueue.add(new ArrayNode(arr[row + 1][col], row + 1, col));
+            }
+            // 下
+            if (row - 1 >= 0 && !isEn[row - 1][col]) {
+                water += Math.max(0, curMin - arr[row - 1][col]);
+                isEn[row - 1][col] = true;
+                priorityQueue.add(new ArrayNode(arr[row - 1][col], row - 1, col));
+            }
+            // 左
+            if (col - 1 >= 0 && !isEn[row][col - 1]) {
+                water += Math.max(0, curMin - arr[row][col - 1]);
+                isEn[row][col  - 1] = true;
+                priorityQueue.add(new ArrayNode(arr[row][col  - 1], row, col - 1));
+            }
+            // 右
+            if (col + 1 <= arr[0].length && !isEn[row][col + 1]) {
+                water += Math.max(0, curMin - arr[row][col + 1]);
+                isEn[row][col  + 1] = true;
+                priorityQueue.add(new ArrayNode(arr[row][col + 1], row, col + 1));
+            }
+
+        }
+        return water;
     }
 }
 
