@@ -5,7 +5,7 @@ package com.ybin.link;
  * @version 1.0 2017/9/4
  * @Description 循环链表基础操作
  */
-public class CircularLink {
+public class CircularLink<T> {
 
     Node head;//头节点
     public CircularLink() {
@@ -17,7 +17,7 @@ public class CircularLink {
      * 循环链表，添加节点
      * @param date
      */
-    public void add(String date) {
+    public void add(T date) {
         if (head.next == null) {
             Node firstNode = new Node(date);
             head.next = firstNode;
@@ -40,7 +40,7 @@ public class CircularLink {
     public void dealNode(String data) {
         Node p = head.next;
         //删除第一个节点
-        if (p.date.equals(data)) {
+        if (p.data.equals(data)) {
             head.next = p.next;
             Node p1 = head.next;
             while (p != p1.next) {
@@ -50,7 +50,7 @@ public class CircularLink {
             return;
         }
         while (p.next != head.next) {
-            if (p.next.date.equals(data)) {
+            if (p.next.data.equals(data)) {
                 p.next = p.next.next;
 
                 break;
@@ -68,7 +68,7 @@ public class CircularLink {
     public void insertNode(String preData, String data) {
         Node p = head.next;
         //在第一个节点前添加数据
-        if (p.date.equals(preData)) {
+        if (p.data.equals(preData)) {
             Node newNode = new Node(data);
             head.next = newNode;
             newNode.next = p;
@@ -79,7 +79,7 @@ public class CircularLink {
             return;
         }
         while (p.next != head.next) {
-            if (p.next.date.equals(preData)) {
+            if (p.next.data.equals(preData)) {
                 Node newNode= new Node(data);
                 newNode.next = p.next;
                 p.next = newNode;
@@ -97,9 +97,9 @@ public class CircularLink {
     public void showAllNode(CircularLink circularLink) {
         Node p = head.next;
         while (p.next != head.next) {
-            System.out.println("节点数据值为:" + p.date);
+            System.out.println("节点数据值为:" + p.data);
             p = p.next;
         }
-        System.out.println("节点数据值为:" + p.date);
+        System.out.println("节点数据值为:" + p.data);
     }
 }

@@ -13,7 +13,9 @@ public class SortTest {
     @Test
     public void buddingSortTest() {
         int[] arr = new int[]{15, -1, 22, 10, 0, 17, 13};
-        Sort.buddingSort(arr);
+//        Sort.buddingSort(arr);
+//        Sort.chooseSort(arr);
+        Sort.insertSort(arr);
         for (int a : arr) {
             System.out.println(a);
         }
@@ -32,6 +34,15 @@ public class SortTest {
     public void quickSortTest() {
         int[] arr = new int[]{15, -1, 22, 10, 0, 17, 13};
         Sort.quickSort(arr);
+        for (int a : arr) {
+            System.out.println(a);
+        }
+    }
+
+    @Test
+    public void shellSortTest() {
+        int[] arr = new int[]{15, -1, 22, 10, 0, 17, 13, 9, 10, 11, 14, 6};
+        Sort.mergeSort(arr);
         for (int a : arr) {
             System.out.println(a);
         }
