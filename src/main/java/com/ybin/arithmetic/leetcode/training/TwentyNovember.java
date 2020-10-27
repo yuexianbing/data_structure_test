@@ -3,7 +3,9 @@ package com.ybin.arithmetic.leetcode.training;
 import com.ybin.btree.BtreeLinked;
 import com.ybin.link.Node;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
 
@@ -338,7 +340,7 @@ public class TwentyNovember {
         }
     }
 
-
+    // com.ybin.arithmetic.leetcode.training.TwentyNovember.water 的变种
     public int water1(int[][] arr) {
         if (arr == null) {
             return 0;
@@ -403,6 +405,68 @@ public class TwentyNovember {
 
         }
         return water;
+    }
+
+    /**
+     * 有序数组arr,目标值target,求的结果集满足 两数之和 = target
+     *
+     * 双指针
+     *
+     * @param arr
+     * @param target
+     * @return
+     */
+    public List<List<Integer>> sumEqualTarget(int[] arr, int target) {
+        if (arr == null) {
+            return null;
+        }
+        List<List<Integer>> result = new ArrayList<>();
+        // 双指针
+        int left = 0;
+        int right = arr.length - 1;
+        for (;left < right;) {
+            if ((left - 1 > 0 && arr[left - 1] == arr[left]
+            || (right + 1 < arr.length - 1 && arr[right + 1] == arr[right]))) {
+                continue;
+            }
+            if (arr[left] + arr[right] > target) {
+                right--;
+            } else if (arr[left] + arr[right] < target) {
+                left++;
+            } else {
+                List<Integer> r = new ArrayList<>(2);
+                r.add(left);
+                r.add(right);
+                result.add(r);
+            }
+        }
+        return result;
+    }
+
+    /**
+     * com.ybin.arithmetic.leetcode.training.TwentyNovember#sumEqualTarget 的变种
+     * 求三数之和满足target
+     *
+     * @param arr
+     * @param target
+     * @return
+     */
+    public List<List<Integer>> sumEqualTarget1(int[] arr, int target) {
+        if (arr == null) {
+            return null;
+        }
+        List<List<Integer>> result = new ArrayList<>();
+        for (int i = 0; i < arr.length; i ++) {
+            int tar = target - arr[i];
+            List<List<Integer>> re = this.sumEqualTarget(arr, tar);
+            if (re != null) {
+                for (int j = 0; j < re.size(); j++) {
+                    re.get(j).add(i);
+                    result.add(re.get(j));
+                }
+            }
+        }
+        return result;
     }
 }
 
