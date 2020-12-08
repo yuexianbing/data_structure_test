@@ -1,7 +1,5 @@
 package com.ybin.arithmetic;
 
-import java.util.Collections;
-
 /**
  * @author yuebing
  * @version 1.0 2018/4/8
@@ -65,13 +63,13 @@ public class Sort {
 
     /**
      * 快速排序
-     *
+     *  4,3,5,8,1,7,6
      * @param a
      * @param low
      * @param height
      */
     public static void quickSort(int[] a, int low, int height) {
-        if (a == null || a.length == 0) {
+        if (a.length == 0) {
             return;
         }
         if (low >= height) {
@@ -101,8 +99,13 @@ public class Sort {
         quickSort(a, right + 1 , height);
     }
 
+    public static void main(String[] args) {
+        int[] a = new int[]{4,3,5,8,1,7,6};
+        new Sort().quickSort(a, 0, a.length - 1);
+    }
+
     public void quick(int[] a, int low, int height) {
-        if (a == null || a.length == 0) {
+        if (a.length == 0) {
             return;
         }
         if (low >= height) {
@@ -110,10 +113,10 @@ public class Sort {
         }
         int key = a[low], left = low, right = height, tmp;
         for (; left < right;) {
-            while (left <= right && a[right] >= key) {
+            while (left < right && a[right] >= key) {
                 right--;
             }
-            while (left <= right && a[left] <= key) {
+            while (left < right && a[left] <= key) {
                 left++;
             }
             if (left < right) {
@@ -136,7 +139,7 @@ public class Sort {
      * @param a
      */
     public static void chooseSort(int[] a) {
-        if (a == null || a.length < 2) {
+        if (a.length < 2) {
             return;
         }
         int tmp, min;
@@ -201,17 +204,16 @@ public class Sort {
         if (arr == null || arr.length < 2) {
             return;
         }
-        int[] temp = new int[arr.length];
-        sort(arr, 0, arr.length - 1, temp);
+        sort(arr, 0, arr.length - 1);
     }
 
-    private static void sort(int[] arr, int left, int right, int[] temp) {
+    private static void sort(int[] arr, int left, int right) {
         if (left >= right) {
             return;
         }
         int mid = (left + right) / 2;
-        sort(arr, left, mid, temp);
-        sort(arr, mid + 1, right, temp);
+        sort(arr, left, mid);
+        sort(arr, mid + 1, right);
         merge(arr, left, right, mid);
     }
 
@@ -226,6 +228,7 @@ public class Sort {
             }
         }
 
+        // 剩下的部分
         int start = i, end = mid;
         if (j <= right) {
             start = j;

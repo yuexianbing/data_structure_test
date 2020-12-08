@@ -1,13 +1,5 @@
 package com.ybin.arithmetic.leetcode;
 
-import org.apache.commons.math3.analysis.function.Min;
-
-import java.util.ArrayList;
-import java.util.Deque;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Stack;
-
 /**
  * @author : bing.yue001
  * @version : 1.0
@@ -36,6 +28,7 @@ public class DynamicPlanning {
         if (wight <= 0) {
             return 0;
         }
+        // 因为边界条件是index = a.length 时返回的0
         int[][] dpWay = new int[a.length][wight];
         for (int row = a.length - 1; row >= 0; row--) {
             for (int col = 0; col < a.length; col++) {
@@ -120,7 +113,7 @@ public class DynamicPlanning {
                 dp[row][cl] = Math.max(dp[row - 1][cl - 1], dp[row - 1][cl]);
                 dp[row][cl] = Math.max(dp[row][cl], dp[row][cl - 1]);
                 if (acs[row] == bcs[cl]) {
-                    dp[row][cl] = Math.max(dp[row][cl], 1 + dp[row - 1][cl]);
+                    dp[row][cl] = Math.max(dp[row][cl], 1 + dp[row - 1][cl - 1]);
                 }
             }
         }
@@ -151,7 +144,7 @@ public class DynamicPlanning {
         }
         // 当前喝完用咖啡机洗,再决策剩下的
         int washTime1 = Math.max(washEndTime, arr[index]) + washTime;
-        int nextTime1 = coffeeLeastTime(arr, index + 1, washTime1, volatilizeTime, washTime1);
+        int nextTime1 = coffeeLeastTime(arr, index + 1, washTime, volatilizeTime, washTime1);
         int p1 = Math.max(washTime1, nextTime1);
 
         // 当前喝完不用咖啡机洗,再决策剩下的
@@ -189,14 +182,14 @@ public class DynamicPlanning {
         for (int row = arr.length - 1; row >= 0; row--) {
             for (int cl = 0; cl < dp[row].length; cl++) {
                 int washTime1 = Math.max(cl, arr[row]) + washTime;
-                int nextTime1 = dp[row + 1][washTime1];
+                int nextTime1 = dp[row + 1][cl];
                 int p1 = Math.max(washTime1, nextTime1);
 
                 int volatilize = arr[row] + volatilizeTime;
                 int nextTime2 = dp[row + 1][cl];
                 int p2 = Math.max(volatilize, nextTime2);
 
-                dp[row][cl] = Math.max(p1, p2);
+                dp[row][cl] = Math.min(p1, p2);
 
 //                // 当前喝完用咖啡机洗,再决策剩下的
 //                int washTime1 = Math.max(washEndTime, arr[index]) + washTime;

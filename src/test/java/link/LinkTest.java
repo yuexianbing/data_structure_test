@@ -41,7 +41,7 @@ public class LinkTest {
 //        singlyLinked.reverseBetween(2, 4);
 //        singlyLinked.forEachNode(singlyLinked);
 //        new Linked().segmentation(singlyLinked.getHead(), 3);
-        new TwentyNovember().reorderList(singlyLinked.getHead());
+//        new TwentyNovember().reorderList(singlyLinked.getHead());
     }
 
     @Test

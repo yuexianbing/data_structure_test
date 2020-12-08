@@ -1,6 +1,7 @@
 package com.ybin.arithmetic.leetcode;
 
 import com.ybin.btree.BtreeLinked;
+import org.apache.commons.math3.analysis.function.Max;
 
 import java.util.ArrayList;
 import java.util.Deque;
@@ -489,6 +490,7 @@ public class ViolenceRecursion {
         }
 
         int result = 0;
+        // count * arr[index] <= rest 包含了,不要当前index的可能性,如果要了当前但是 count * arr[index] <= rest进不去就退回上一层递归
         for (int count = 0;  count * arr[index] <= rest; count++) {
             result += money(arr, index + 1, rest - count * arr[index], dp);
             dp[index][rest] = result;
@@ -561,7 +563,7 @@ public class ViolenceRecursion {
             }
             StringBuilder sb = new StringBuilder();
             for (int cl = 0; cl < tempMap.length; cl++) {
-                if (tempMap[cl] == 0) {
+                if (tempMap[cl] == 0 || pasterMap[cow][cl] == 0) {
                     continue;
                 }
                 if (pasterMap[cow][cl] - tempMap[cl] < 0) {
@@ -581,6 +583,42 @@ public class ViolenceRecursion {
         restString.put(rest, ans == Integer.MAX_VALUE ? -1 : ans);
         return restString.get(rest);
     }
+
+
+    public int subString(String[] str1, String[] str2) {
+        if (str1 == null || str2 == null) {
+            return 0;
+        }
+        return subString(str1, str2, str1.length - 1, str2.length - 1);
+    }
+
+    private int subString(String[] str1, String[] str2, int s1Index, int s2Index) {
+        if (s1Index == 0 && s2Index == 0) {
+            return str1[s1Index].equals(str2[s2Index]) ? 1 : 0;
+        }
+        // s1Index 与 s2Index 不同时为0
+        if (s1Index == 0) {
+            return (str1[s1Index].equals(str2[s2Index]) || subString(str1, str2, s1Index, s2Index - 1) == 1) ? 1 :0;
+        }
+        if (s2Index == 0) {
+            return (str1[s1Index].equals(str2[s2Index]) || subString(str1, str2, s1Index - 1, s2Index) == 1) ? 1 :0;
+        }
+        // 子序列以s1结尾
+        int p1 = subString(str1, str2, s1Index, s2Index - 1);
+        // 子序列以s2结尾
+        int p2 = subString(str1, str2, s1Index - 1, s2Index);
+        // 子序列即不以s1结尾又不以s2结尾
+        int p3 = subString(str1, str2, s1Index - 1, s2Index - 1);
+        // 子序列即以s1结尾又以s2结尾
+        int p4 = 0;
+        if (str1[s1Index].equals(str2[s2Index])) {
+            p4 = p3 + 1;
+        }
+
+        return Math.max(Math.max(Math.max(p1, p2), p3), p4);
+
+    }
+
 
 
 

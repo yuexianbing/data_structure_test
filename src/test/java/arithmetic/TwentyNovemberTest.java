@@ -22,4 +22,20 @@ public class TwentyNovemberTest {
         }
 
     }
+
+    @Test
+    public void testTriePrint() {
+        twentyNovember.treePrint(new String[]{"b\\se", "d\\f\\g", "a\\j\\k"});
+    }
+
+    @Test
+    public void sub() {
+        int result = twentyNovember.sub(new int[]{3,4,2,5,1,6,7});
+        System.out.println(result);
+    }
+
+    @Test
+    public void subStringAdjustTest() {
+        twentyNovember.subStringAdjust(new String("abc"), new String("adc"), 1, 2, 3);
+    }
 }
