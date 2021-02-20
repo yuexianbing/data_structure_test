@@ -2,11 +2,11 @@ package com.ybin.arithmetic.leetcode.training;
 
 import com.ybin.btree.BtreeLinked;
 import com.ybin.link.Node;
-import com.ybin.link.SinglyLinked;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -286,7 +286,7 @@ public class TwentyNovember {
      * Math.min(maxLeft, MaxRight) - i求能放入多少水
      *
      * 双指针法
-     * 6 7 2 7 8 5 9
+     * 6 7 2 7 8 5 4
      * @param arr
      * @return
      */
@@ -301,10 +301,10 @@ public class TwentyNovember {
         int water = 0;
         while (left <= right) {
             if (leftMax <= rightMax) {
-                water += Math.max(0, arr[left] - leftMax);
+                water += Math.max(0, leftMax - arr[left]);
                 leftMax = Math.max(leftMax, arr[left++]);
             } else {
-                water += Math.max(0, arr[right] - rightMax);
+                water += Math.max(0, rightMax - arr[right]);
                 rightMax = Math.max(rightMax, arr[right--]);
             }
         }
@@ -640,24 +640,24 @@ public class TwentyNovember {
     /**
      * 求数组的最长递增子序列的最大长度
      * 3 4 1 2 0 6
-     * @param arr
+     * @param nums
      * @return
      */
-    public int sub(int[] arr) {
-        if (arr.length == 0) {
+    public int lengthOfLIS(int[] nums) {
+        if (nums.length == 0) {
             return 0;
         }
-        int[] dp = new int[arr.length];
+        int[] dp = new int[nums.length];
 
         int resultMax = 0;
-        for (int i = 0; i < arr.length; i++) {
+        for (int i = 0; i < nums.length; i++) {
             int max = 0;
             for (int j = 0; j < i; j++) {
-                if (arr[i] > arr[j]) {
+                if (nums[i] > nums[j]) {
                     max = Math.max(max, dp[j]);
                 }
             }
-            dp[i] = max + 1;
+             dp[i] = max + 1;
             resultMax = Math.max(resultMax, dp[i]);
         }
         return resultMax;
@@ -720,7 +720,8 @@ public class TwentyNovember {
     }
 
     /**
-     * 二维数组求最大累加和
+     * 二维数组求子数组的最大累加和
+     *
      * pre 是前几行每行相同列累加后的值,交替替换,每次从i换行时都从新初始化pre
      * 即最后是将每行相同列累加压缩后成为一维数组,求累加和,类似于上面求和
      * O(n2*K)
@@ -735,7 +736,7 @@ public class TwentyNovember {
         int max = Integer.MIN_VALUE;
         for (int i = 0; i < arr.length; i++) {
             int[] pre = new int[arr[i].length];
-            for (int j = i; j < arr.length; j++) {
+            for (int j = i + 1; j < arr.length; j++) {
                 int cur = 0;
                 for (int k = 0; k < arr.length; k++) {
                     pre[k] = pre[k] + arr[j][k];
@@ -922,7 +923,7 @@ public class TwentyNovember {
         }
         int cur = distinanceMap.get(start);
         for (String n : next) {
-            if (cur == distinanceMap.get(n) + 1) {
+            if (cur + 1 == distinanceMap.get(n)) {
                 path.add(n);
                 shortPath(n, to, path, nextMap, distinanceMap, result);
             }
@@ -1048,7 +1049,7 @@ public class TwentyNovember {
         int start = 0;
         for (int i = 0; i < gas.length; i++) {
             curCost += gas[i] - cost[i];
-            total = curCost;
+            total += gas[i] - cost[i];
             if (curCost < 0) {
                 curCost = 0;
                 start = i + 1;
@@ -1297,6 +1298,9 @@ public class TwentyNovember {
         return st1(str.toCharArray(), 0, 0, new int[26]);
     }
 
+    public void t (Object... params) {
+
+    }
     private int st1(char[] c, int index, int length, int[] exist) {
         if (index > c.length - 1) {
             return length;
@@ -1374,7 +1378,7 @@ public class TwentyNovember {
         // 最后结果
         int len = 0;
         // 当前位置到最左的最远距离
-        int curLen = 0;
+        int curLen;
         for (int i = 0; i < chars.length; i++) {
             pre = Math.max(pre, map[chars[i]]);
             curLen = i - pre;
@@ -1383,20 +1387,164 @@ public class TwentyNovember {
         }
         return len;
     }
+
+
+    public boolean isPalindrome(int x) {
+        if (x < 0) {
+            return false;
+        }
+        if (x / 10 == 0) {
+            return true;
+        }
+        int res = 0;
+        while (x > res) {
+            res = res * 10 + x % 10;
+            x = x / 10;
+        }
+        return res == x || x == res / 10;
+    }
+
+    public int maxArea(int[] height) {
+        if (height.length == 0) {
+            return 0;
+        }
+        if (height.length == 1) {
+            return 0;
+        }
+        int left = 0;
+        int right = height.length - 1;
+        int maxArea = 0;
+        while (left <= right) {
+
+            if (height[left] >= height[right]) {
+                maxArea = Math.max(maxArea, (right - left) * height[right]);
+                right--;
+            } else {
+                maxArea = Math.max(maxArea, (right - left) * height[left]);
+                left++;
+            }
+        }
+        return maxArea;
+    }
+
+    public int trap(int[] height) {
+        if (height.length == 0) {
+            return 0;
+        }
+        if (height.length == 1) {
+            return 0;
+        }
+        int left = 0;
+        int right = height.length - 1;
+        int water = 0;
+        int preMax = 0;
+        while (left <= right) {
+// 双指针, 左边小则左边后移，并用前一次的preMax-当前左边值累加,反之右边相同套路
+            if (height[left] < height[right]) {
+                if (preMax > height[left]) {
+                    water += preMax - height[left];
+                } else {
+                    preMax = height[left];
+                }
+                left++;
+            } else {
+                if (preMax > height[right]) {
+                    water += preMax - height[right];
+                } else {
+                    preMax = height[right];
+                }
+                right--;
+            }
+        }
+        return water;
+    }
+
+    public List<List<Integer>> threeSum(int[] nums) {
+        if (nums.length == 0) {
+            return new ArrayList<>(0);
+        }
+        Map<Integer, Integer> twoSum;
+        int target;
+        List<List<Integer>> result = new ArrayList<>(nums.length / 3 + 1);
+        Set<Integer> set = new HashSet<>();
+        int xr;
+        for (int i = 0; i < nums.length; i++) {
+            target = 0 - nums[i];
+            twoSum = new HashMap<>();
+            for (int j = i + 1; j < nums.length; j++) {
+                xr = nums[i] ^ (target - nums[j]) ^ nums[j];
+                if (!set.contains(xr) && twoSum.containsKey(target - nums[j])) {
+                    result.add(Arrays.asList(nums[i], target - nums[j], nums[j]));
+                    xr = nums[i] ^ target - nums[j] ^ nums[j];
+                    set.add(xr);
+                }
+                twoSum.put(nums[j], j);
+            }
+        }
+        return result;
+    }
+
+    public List<List<Integer>> threeSum1(int[] nums) {
+        if (nums.length == 0) {
+            return new ArrayList<>(0);
+        }
+        Arrays.sort(nums);
+        List<List<Integer>> result = new ArrayList<>(nums.length / 3 + 1);
+        int target;
+        int right;
+        for (int i = 0; i < nums.length; i++) {
+            if (i > 0 && nums[i] == nums[i - 1]) {
+                continue;
+            }
+            target = -nums[i];
+            for (int left = i + 1; left < nums.length; left++) {
+                if (left > i + 1 && nums[left] == nums[left - 1]) {
+                    continue;
+                }
+                right = nums.length - 1;
+                while (right > left) {
+                    if (nums[left] + nums[right] == target) {
+                        result.add(Arrays.asList(nums[i], nums[left], nums[right]));
+                        break;
+                    } else if (nums[left] + nums[right] > target) {
+                        right--;
+                    } else {
+                        break;
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
+
     public static void main(String[] args) {
 //        new TwentyNovember().treePrint(new String[]{"b\\se", "d\\f\\g", "a\\j\\k"});
 
-        SinglyLinked singlyLinked = new SinglyLinked();
-        singlyLinked.add(3);
-        singlyLinked.add(5);
-        singlyLinked.add(7);
-        SinglyLinked singlyLinked1 = new SinglyLinked();
-        singlyLinked1.add(2);
-        singlyLinked1.add(3);
-        singlyLinked1.add(4);
+//        SinglyLinked singlyLinked = new SinglyLinked();
+//        singlyLinked.add(3);
+//        singlyLinked.add(5);
+//        singlyLinked.add(7);
+//        SinglyLinked singlyLinked1 = new SinglyLinked();
+//        singlyLinked1.add(2);
+//        singlyLinked1.add(3);
+//        singlyLinked1.add(4);
+//
+//        Executors.newScheduledThreadPool(1).scheduleAtFixedRate(new Runnable() {
+//            @Override
+//            public void run() {
+//                System.out.println("");
+//            }
+//        }, 1, 1 , TimeUnit.MILLISECONDS);
+//
+//        new TwentyNovember().st("abcacdef");
 
-        new TwentyNovember().st("abcacdef");
+//        new TwentyNovember().sag(new int[]{1,5,2,1,7});
 
+        new TwentyNovember().nextPermutation(new int[]{1,2,4,3,5,6,7,-3,-2,0,-4,-5});
     }
+
+
+
 }
 

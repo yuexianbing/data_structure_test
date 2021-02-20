@@ -1,7 +1,6 @@
 package queue;
 
 import com.ybin.queue.ArrayQueue;
-import javafx.beans.binding.ObjectExpression;
 import org.junit.Test;
 
 /**

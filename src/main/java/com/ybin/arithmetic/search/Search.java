@@ -6,7 +6,7 @@ import java.util.Objects;
  * @author yuebing
  * @version 1.0
  * @Date 2018/9/18
- * @category
+ * @category 二分查找
  */
 public class Search<T> {
 
@@ -99,29 +99,30 @@ public class Search<T> {
     /**
      * 查找第一个大于给定值的数据
      *
-     * @param num
+     * @param arr
      * @return
      */
-    public int binarySearchGreaterThanFirst(int[] num, int target) {
-        int low = 0, height = num.length - 1;
-        while (low <= height) {
-            int mid = low + ((height - low) >> 1);
-            if (num[mid] >= target) {
-                if (mid == 0 || num[mid - 1] < target) {
-                    return num[mid];
-                } else {
-
-                }
-            } else if (num[mid] < target) {
-                height = mid - 1;
+    public int binarySearchGreaterThanFirst(int[] arr, int target) {
+        int left = 0, right = arr.length - 1;
+        int res = -1;
+        while (left <= right)//不需要加判断条件 && right>=0 && left<length
+        {
+            //int mid = (left + right) / 2;   这种方法会溢出！！！！
+            int mid = left + (right - left) / 2;
+            if (arr[mid] > target)
+            {
+                res = mid;
+                right = mid - 1;
             }
+            else// if (arr[mid] <= k)
+                left = mid + 1;
         }
-        return -1;
+        return res;
     }
 
     public static void main(String[] args) {
         int[] num = new int[]{1, 2, 4, 7, 9, 10};
-        System.out.printf("" + new Search<>().binarySearchGreaterThanFirst(num, 4));
+        System.out.printf("" + new Search<>().binarySearchGreaterThanFirst(num, 6));
     }
 
 }

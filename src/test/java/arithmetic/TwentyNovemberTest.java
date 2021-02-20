@@ -30,7 +30,7 @@ public class TwentyNovemberTest {
 
     @Test
     public void sub() {
-        int result = twentyNovember.sub(new int[]{3,4,2,5,1,6,7});
+        int result = twentyNovember.lengthOfLIS(new int[]{3,4,2,5,1,6,7});
         System.out.println(result);
     }
 

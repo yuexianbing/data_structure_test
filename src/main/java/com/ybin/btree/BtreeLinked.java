@@ -12,7 +12,7 @@ import java.util.Queue;
  * @version 1.0 2017/9/4
  * @Description 链表实现二叉树,二叉树每层最多2^(n-1)各节点，深度为k的二叉树最多有2^k-1个节点。
  */
-@Data
+
 public class BtreeLinked<T> {
 
     public static class Node<T> {
@@ -63,6 +63,14 @@ public class BtreeLinked<T> {
     }
 
     private Node root;
+
+    public Node getRoot() {
+        return root;
+    }
+
+    public void setRoot(Node root) {
+        this.root = root;
+    }
 
     public BtreeLinked(int t) {
         root = new Node(t);
@@ -242,8 +250,8 @@ public class BtreeLinked<T> {
             min = Math.min(min, right.min);
         }
 
-        if (left == null ? true : (left.isBst && left.max < node.item)
-            && right == null ? true : (right.isBst && right.min > node.item)
+        if (left == null || ((left.isBst && left.max < node.item)
+                && right == null || (right.isBst && right.min > node.item))
         ) {
             isBst = true;
             maxSize = (left == null ? 0 : left.maxSize) + (right == null ? 0 : right.maxSize) + 1;
@@ -254,12 +262,27 @@ public class BtreeLinked<T> {
         return new NodeBstInfo(isBst, maxSize, max, min);
     }
 
-    @Data
     public class NodeHappy{
 
         private int happy;
 
         private List<NodeHappy> nodeHappies;
+
+        public int getHappy() {
+            return happy;
+        }
+
+        public void setHappy(int happy) {
+            this.happy = happy;
+        }
+
+        public List<NodeHappy> getNodeHappies() {
+            return nodeHappies;
+        }
+
+        public void setNodeHappies(List<NodeHappy> nodeHappies) {
+            this.nodeHappies = nodeHappies;
+        }
     }
 
     @Data
@@ -306,7 +329,6 @@ public class BtreeLinked<T> {
         return new NodeHappyInfo(yes, no);
     }
 
-    @Data
     public class NodeCompleteInfo {
 
         /**
@@ -325,6 +347,30 @@ public class BtreeLinked<T> {
         public NodeCompleteInfo(boolean isFull, boolean isCbt, int height) {
             this.isFull = isFull;
             this.isCbt = isCbt;
+            this.height = height;
+        }
+
+        public boolean isFull() {
+            return isFull;
+        }
+
+        public void setFull(boolean full) {
+            isFull = full;
+        }
+
+        public boolean isCbt() {
+            return isCbt;
+        }
+
+        public void setCbt(boolean cbt) {
+            isCbt = cbt;
+        }
+
+        public int getHeight() {
+            return height;
+        }
+
+        public void setHeight(int height) {
             this.height = height;
         }
     }
